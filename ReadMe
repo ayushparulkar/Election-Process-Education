@@ -1,0 +1,60 @@
+# 🗳️ Democracy Lab AI
+
+An intelligent learning platform designed to help users understand the **Indian election process** through structured, reliable, and interactive guidance.
+
+---
+
+## 🚀 Features
+
+### 🤖 Smart Knowledge Assistant
+- Responds instantly using a **curated knowledge base**
+- No hallucinations → ensures **accurate and trustworthy information**
+- Designed for clarity and simplicity
+
+### 🎯 Structured Learning System
+- Voter Registration
+- Voting Day Process
+- Election Results
+- Step-by-step guided explanations
+
+### 💡 Context-Aware Suggestions
+- Dynamic follow-up questions
+- Helps users explore topics deeper
+- Guided learning experience
+
+### ⚡ Fast & Reliable
+- Works without external AI APIs
+- No latency issues
+- Consistent responses every time
+
+### 🎨 Modern UI/UX
+- Clean glassmorphism interface
+- Smooth animations (Framer Motion)
+- Fully responsive design
+
+---
+
+## 🧠 Core Idea
+
+Instead of relying on unpredictable AI APIs, this project uses a **manually curated dataset** of election-related knowledge.
+
+This approach ensures:
+- ✅ High accuracy
+- ✅ No misinformation
+- ✅ Consistent user experience
+- ✅ Faster performance
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 16, React, TypeScript  
+- **Styling:** Tailwind CSS  
+- **State Management:** Custom Hooks + Store  
+- **Animations:** Framer Motion  
+- **Backend:** Next.js API Routes  
+- **Data Source:** Structured JSON Knowledge Base  
+
+---
+
+## 📂 Project Structure
