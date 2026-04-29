@@ -1,0 +1,80 @@
+[
+  {
+    "id": "voter-registration",
+    "topic": "Voter Registration",
+    "keywords": ["register", "voter id", "epic", "enroll", "form 6", "new voter"],
+    "content": "To vote in India, you must be a registered voter. Registration is done through the Election Commission of India (ECI) via the National Voters' Service Portal (NVSP) or the Voter Helpline App.",
+    "steps": [
+      "Visit the NVSP portal or download the Voter Helpline App.",
+      "Fill out Form 6 for fresh registration.",
+      "Upload required documents: Proof of age (Birth Certificate/Aadhaar) and Proof of residence.",
+      "Submit the application. A Booth Level Officer (BLO) will visit for verification.",
+      "Once verified, your EPIC card will be generated and sent via post."
+    ],
+    "examples": [
+      "Rahul just turned 18. He goes to nvsp.in, fills Form 6 with his Aadhaar and photo, and receives his Voter ID in 4 weeks."
+    ],
+    "related_links": [
+      { "title": "NVSP Portal", "url": "https://www.nvsp.in" },
+      { "title": "Voter Helpline App", "url": "https://voterportal.eci.gov.in" }
+    ]
+  },
+  {
+    "id": "voting-day",
+    "topic": "Voting Day Procedure",
+    "keywords": ["how to vote", "polling booth", "evm", "vvpat", "ink", "process"],
+    "content": "On election day, you must go to your assigned polling booth. The process involves verification, marking with indelible ink, and casting your vote on the EVM.",
+    "steps": [
+      "Check your name in the electoral roll and find your polling booth.",
+      "Carry your EPIC card or an alternative ID (like Aadhaar/DL).",
+      "The first polling official checks your name and ID.",
+      "The second official inks your finger and gives you a slip.",
+      "The third official takes the slip and enables the EVM.",
+      "Go to the voting compartment, press the button next to your candidate's symbol on the EVM.",
+      "Check the VVPAT window for a 7-second slip confirmation of your vote."
+    ],
+    "examples": [
+      "Priya visits the local school (polling booth), shows her Aadhaar, gets the blue ink mark, and presses the EVM button for her chosen party."
+    ],
+    "related_links": [
+      { "title": "Find Polling Station", "url": "https://electoralsearch.in" }
+    ]
+  },
+  {
+    "id": "voter-rights",
+    "topic": "Voter Rights & Responsibilities",
+    "keywords": ["rights", "nota", "complaint", "observer", "bribery", "ethics"],
+    "content": "Every voter has the right to a free and fair election. You have the right to secrecy and the right to report any misconduct.",
+    "steps": [
+      "Vote without fear or influence from anyone.",
+      "Maintain the secrecy of your vote.",
+      "Use NOTA (None Of The Above) if you don't support any candidate.",
+      "Report bribery or misconduct to the Election Observer or via C-Vigil app."
+    ],
+    "examples": [
+      "If someone tries to offer money for a vote, Suresh uses the C-Vigil app to report it anonymously to the ECI."
+    ],
+    "related_links": [
+      { "title": "C-Vigil App", "url": "https://cvigil.eci.gov.in" }
+    ]
+  },
+  {
+    "id": "election-results",
+    "topic": "Election Results & Counting",
+    "keywords": ["counting", "results", "winner", "majority", "declaration"],
+    "content": "After polling ends, EVMs are sealed and stored in strong rooms. On the counting day, they are opened in the presence of candidates and observers.",
+    "steps": [
+      "EVMs are transported to counting centers under tight security.",
+      "Votes are counted round by round for each constituency.",
+      "VVPAT slips are verified for a few randomly selected booths.",
+      "The candidate with the most votes is declared the winner.",
+      "The Election Commission officially notifies the results."
+    ],
+    "examples": [
+      "On counting day, news channels show the 'lead' as EVM totals are tallied, and finally, the Returning Officer issues a certificate to the winner."
+    ],
+    "related_links": [
+      { "title": "ECI Results Portal", "url": "https://results.eci.gov.in" }
+    ]
+  }
+]
