@@ -6,53 +6,41 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { staggerContainer, fadeInUp } from "@/lib/animation-variants";
 import { Calendar, Users, FileCheck, Vote, BarChart3, Award } from "lucide-react";
 
-const timelineEvents = [
-  {
-    id: 1,
-    title: "Register as voter",
-    description: "Apply online or offline to get your name on the electoral roll.",
-    date: "Step 1",
-    icon: Calendar,
-    color: "#6366F1",
+import { useStore } from "@/lib/store";
+
+const timelineI18n = {
+  en: {
+    header: ["Election", "Process"],
+    sub: "A step-by-step flow of the Indian election journey",
+    events: [
+      { id: 1, title: "Register as voter", description: "Apply online or offline to get your name on the electoral roll.", date: "Step 1", icon: Calendar, color: "#6366F1" },
+      { id: 2, title: "Verify voter ID", description: "Check your name in the voter list and verify your EPIC details.", date: "Step 2", icon: FileCheck, color: "#22D3EE" },
+      { id: 3, title: "Find polling booth", description: "Locate your assigned polling station near your residence.", date: "Step 3", icon: Users, color: "#10B981" },
+      { id: 4, title: "Vote using EVM", description: "Visit the booth on election day and cast your vote securely.", date: "Step 4", icon: Vote, color: "#F59E0B" },
+      { id: 5, title: "View results", description: "Wait for counting day to see the official election results.", date: "Step 5", icon: BarChart3, color: "#EF4444" },
+    ],
+    info: "This phase is crucial for ensuring a fair and transparent election process. All procedures follow the guidelines set by the Election Commission."
   },
-  {
-    id: 2,
-    title: "Verify voter ID",
-    description: "Check your name in the voter list and verify your EPIC details.",
-    date: "Step 2",
-    icon: FileCheck,
-    color: "#22D3EE",
-  },
-  {
-    id: 3,
-    title: "Find polling booth",
-    description: "Locate your assigned polling station near your residence.",
-    date: "Step 3",
-    icon: Users,
-    color: "#10B981",
-  },
-  {
-    id: 4,
-    title: "Vote using EVM",
-    description: "Visit the booth on election day and cast your vote securely.",
-    date: "Step 4",
-    icon: Vote,
-    color: "#F59E0B",
-  },
-  {
-    id: 5,
-    title: "View results",
-    description: "Wait for counting day to see the official election results.",
-    date: "Step 5",
-    icon: BarChart3,
-    color: "#EF4444",
-  },
-];
+  hi: {
+    header: ["चुनाव", "प्रक्रिया"],
+    sub: "भारतीय चुनाव यात्रा का चरण-दर-चरण प्रवाह",
+    events: [
+      { id: 1, title: "मतदाता पंजीकरण", description: "मतदाता सूची में अपना नाम दर्ज कराने के लिए ऑनलाइन या ऑफलाइन आवेदन करें।", date: "चरण 1", icon: Calendar, color: "#6366F1" },
+      { id: 2, title: "वोटर आईडी सत्यापित करें", description: "मतदाता सूची में अपना नाम जांचें और अपने एपिक विवरणों को सत्यापित करें।", date: "चरण 2", icon: FileCheck, color: "#22D3EE" },
+      { id: 3, title: "पोलिंग बूथ खोजें", description: "अपने निवास के पास अपने निर्धारित मतदान केंद्र का पता लगाएं।", date: "चरण 3", icon: Users, color: "#10B981" },
+      { id: 4, title: "ईवीएम का उपयोग करके वोट दें", description: "चुनाव के दिन बूथ पर जाएं और अपना वोट सुरक्षित रूप से डालें।", date: "चरण 4", icon: Vote, color: "#F59E0B" },
+      { id: 5, title: "परिणाम देखें", description: "आधिकारिक चुनाव परिणाम देखने के लिए मतगणना के दिन का इंतजार करें।", date: "चरण 5", icon: BarChart3, color: "#EF4444" },
+    ],
+    info: "यह चरण निष्पक्ष और पारदर्शी चुनाव प्रक्रिया सुनिश्चित करने के लिए महत्वपूर्ण है। सभी प्रक्रियाएं चुनाव आयोग द्वारा निर्धारित दिशानिर्देशों का पालन करती हैं।"
+  }
+};
 
 export function TimelineSection() {
   const [activeEvent, setActiveEvent] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const { language } = useStore();
+  const t = timelineI18n[language];
 
   return (
     <section id="process" className="relative py-32 px-4 overflow-hidden">
@@ -69,10 +57,10 @@ export function TimelineSection() {
             variants={fadeInUp}
             className="text-4xl md:text-5xl font-bold mb-4"
           >
-            Election <span className="gradient-text">Process</span>
+            {t.header[0]} <span className="gradient-text">{t.header[1]}</span>
           </motion.h2>
           <motion.p variants={fadeInUp} className="text-[#9CA3AF] text-lg max-w-2xl mx-auto">
-            A step-by-step flow of the Indian election journey
+            {t.sub}
           </motion.p>
         </motion.div>
 
@@ -83,7 +71,7 @@ export function TimelineSection() {
 
           {/* Events */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {timelineEvents.map((event, index) => {
+            {t.events.map((event, index) => {
               const Icon = event.icon;
               return (
                 <motion.div
@@ -157,9 +145,7 @@ export function TimelineSection() {
                       >
                         <div className="mt-4 pt-4 border-t border-white/10">
                           <p className="text-sm text-[#9CA3AF]">
-                            This phase is crucial for ensuring a fair and transparent
-                            election process. All procedures follow the guidelines set
-                            by the Election Commission.
+                            {t.info}
                           </p>
                         </div>
                       </motion.div>

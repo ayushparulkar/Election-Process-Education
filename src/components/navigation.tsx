@@ -5,20 +5,33 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Vote, LogIn, User, LogOut } from "lucide-react";
 import { useAuthContext } from "@/components/auth/auth-provider";
 import { LoginModal } from "@/components/auth/login-modal";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useStore } from "@/lib/store";
 
-const navLinks = [
-  { label: "Home", href: "#hero" },
-  { label: "Simulation", href: "#simulation" },
-  { label: "Timeline", href: "#timeline" },
-  { label: "Dashboard", href: "#dashboard" },
-  { label: "Misinformation", href: "#misinfo" },
-];
+const navI18n = {
+  en: [
+    { label: "Home", href: "#hero" },
+    { label: "Simulation", href: "#simulation" },
+    { label: "Timeline", href: "#timeline" },
+    { label: "Dashboard", href: "#dashboard" },
+    { label: "Misinformation", href: "#misinfo" },
+  ],
+  hi: [
+    { label: "होम", href: "#hero" },
+    { label: "सिमुलेशन", href: "#simulation" },
+    { label: "समयरेखा", href: "#timeline" },
+    { label: "डैशबोर्ड", href: "#dashboard" },
+    { label: "गलत सूचना", href: "#misinfo" },
+  ],
+};
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { user, isGuest, isAuthenticated, signOut } = useAuthContext();
+  const { language } = useStore();
+  const navLinks = navI18n[language];
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -45,7 +58,7 @@ export function Navigation() {
               </span>
             </a>
 
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
@@ -57,10 +70,14 @@ export function Navigation() {
                 </a>
               ))}
 
+              <div className="h-6 w-[1px] bg-white/10 mx-2" />
+              <LanguageSwitcher />
+
               {isAuthenticated && user ? (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 ml-2">
                   <span className="text-sm text-[#9CA3AF]">
-                    Welcome, <span className="text-white font-medium">{user.user_metadata?.full_name || user.email?.split("@")[0]}</span>
+                    <span className="hidden lg:inline">{language === 'en' ? 'Welcome,' : 'स्वागत है,'} </span>
+                    <span className="text-white font-medium">{user.user_metadata?.full_name || user.email?.split("@")[0]}</span>
                   </span>
                   <div className="flex items-center gap-3">
                     {user.user_metadata?.avatar_url ? (
@@ -75,7 +92,7 @@ export function Navigation() {
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-[#9CA3AF] hover:text-white transition-colors"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      Logout
+                      {language === 'en' ? 'Logout' : 'लॉगआउट'}
                     </button>
                   </div>
                 </div>
@@ -85,7 +102,7 @@ export function Navigation() {
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-sm font-medium text-white hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all"
                 >
                   <LogIn className="w-3.5 h-3.5" />
-                  {isGuest ? "Sign In" : "Get Started"}
+                  {isGuest ? (language === 'en' ? 'Sign In' : 'साइन इन') : (language === 'en' ? 'Get Started' : 'शुरू करें')}
                 </button>
               )}
             </div>
@@ -108,7 +125,7 @@ export function Navigation() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <div className="flex flex-col items-center justify-center h-full gap-8">
+            <div className="flex flex-col items-center justify-center h-full gap-6">
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.label}
@@ -122,13 +139,17 @@ export function Navigation() {
                   {link.label}
                 </motion.a>
               ))}
+              
+              <div className="w-20 h-[1px] bg-white/10 my-2" />
+              <LanguageSwitcher />
+
               {isAuthenticated ? (
                 <button
                   onClick={() => { signOut(); setIsMobileMenuOpen(false); }}
                   className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-white"
                 >
                   <LogOut className="w-5 h-5" />
-                  Logout
+                  {language === 'en' ? 'Logout' : 'लॉगआउट'}
                 </button>
               ) : (
                 <button
@@ -136,7 +157,7 @@ export function Navigation() {
                   className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white"
                 >
                   <LogIn className="w-5 h-5" />
-                  {isGuest ? "Sign In" : "Get Started"}
+                  {isGuest ? (language === 'en' ? 'Sign In' : 'साइन इन') : (language === 'en' ? 'Get Started' : 'शुरू करें')}
                 </button>
               )}
             </div>

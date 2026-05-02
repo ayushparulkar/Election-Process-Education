@@ -21,9 +21,17 @@ interface SimulationState {
   reset: () => void;
 }
 
-interface StoreState extends AuthState, SimulationState {}
+interface UIState {
+  language: "en" | "hi";
+  setLanguage: (lang: "en" | "hi") => void;
+}
+
+interface StoreState extends AuthState, SimulationState, UIState {}
 
 export const useStore = create<StoreState>((set) => ({
+  // UI state
+  language: "en",
+  setLanguage: (language) => set({ language }),
   // Auth state
   user: null,
   isGuest: false,

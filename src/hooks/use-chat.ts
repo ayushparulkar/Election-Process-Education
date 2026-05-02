@@ -2,49 +2,28 @@
 
 import { useState, useCallback, useRef } from "react";
 import { useStore } from "@/lib/store";
+import { searchElectionInfo } from "@/lib/search";
 import type { ChatMessage, ChatMode, ChatContext, Suggestion } from "@/types/chat";
 import { DEFAULT_SUGGESTIONS } from "@/types/chat";
-import data from "@/data/assistant-data.json";
 
-function findResponse(query: string) {
-  const lowerQuery = query.toLowerCase();
-  for (const item of data.faq) {
-    if (item.keywords.some(k => lowerQuery.includes(k))) {
-      return item.answer;
-    }
-  }
-  return "I'm sorry, I don't have information on that. Try asking about registration, documents, or EVM.";
-}
-
-function generateResponse(item: any, mode: string) {
-  if (!item) {
-    return {
-      reply:
-        "I couldn’t find that. Try asking about voter registration, voting day, or election results.",
-    };
-  }
-
-  if (mode === "simple") {
-    return { reply: item.simple };
-  }
-
-  if (mode === "example") {
-    return { reply: item.example };
-  }
-
-  if (mode === "detailed") {
-    const steps = item.detailed?.steps
-      ?.map((s: string, i: number) => `${i + 1}. ${s}`)
-      .join("\n");
-
-    return {
-      reply: `${item.detailed?.description}\n\n${steps}`,
-      actions: item.actions || [],
-    };
-  }
-
-  return { reply: item.simple };
-}
+const chatI18n = {
+  en: {
+    welcome: "Welcome to Election Assistant! I am here to help you understand the Indian election process. Choose a mode below and ask me anything!",
+    cleared: "Chat cleared! Welcome back to Democracy Lab AI. How can I help you today?",
+    switched: (mode: string) => `Switched to ${mode.charAt(0).toUpperCase() + mode.slice(1)} mode. I will now provide ${mode === "simple" ? "short and easy" : mode === "detailed" ? "in-depth structured" : mode === "example" ? "real-life scenario-based" : "guided step-by-step"} explanations. Ask me anything!`,
+    error: "Something went wrong. Please try again.",
+    nextStep: "Next Step",
+    learnMore: "Learn More",
+  },
+  hi: {
+    welcome: "इलेक्शन असिस्टेंट में आपका स्वागत है! मैं यहां आपको भारतीय चुनाव प्रक्रिया को समझने में मदद करने के लिए हूं। नीचे दिए गए मोड में से एक चुनें और मुझसे कुछ भी पूछें!",
+    cleared: "चैट साफ़ कर दी गई! डेमोक्रेसी लैब एआई में वापस स्वागत है। मैं आज आपकी क्या मदद कर सकता हूँ?",
+    switched: (mode: string) => `मोड बदलकर ${mode === "simple" ? "सरल" : mode === "detailed" ? "विस्तृत" : mode === "example" ? "उदाहरण" : "निर्देशित"} कर दिया गया है। मैं अब ${mode === "simple" ? "छोटे और आसान" : mode === "detailed" ? "गहराई से संरचित" : mode === "example" ? "वास्तविक जीवन के परिदृश्य आधारित" : "चरण-दर-चरण"} स्पष्टीकरण प्रदान करूँगा। मुझसे कुछ भी पूछें!`,
+    error: "कुछ गलत हो गया। कृपया पुन: प्रयास करें।",
+    nextStep: "अगला चरण",
+    learnMore: "अधिक जानें",
+  },
+};
 
 const MAX_HISTORY = 5;
 const TYPING_SPEED = 12; // ms per char (simulated typing)
@@ -53,89 +32,33 @@ function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-function getFollowUpSuggestions(lastMessage: string, context: ChatContext): Suggestion[] {
+function getFollowUpSuggestions(lastMessage: string, context: ChatContext, lang: "en" | "hi"): Suggestion[] {
+  const t = chatI18n[lang];
   const lower = lastMessage.toLowerCase();
-  if (lower === "next") {
-    return [
-      { id: "f13", text: "Learn More", category: "curiosity" },
-      { id: "f14", text: "Start Simulation", category: "practical" },
-    ];
-  }
-  if (lower.includes("id") || lower.includes("document")) {
-    return [
-      { id: "f1", text: "What if I lost my voter ID?", category: "practical" },
-      { id: "f2", text: "Can I vote with Aadhaar?", category: "practical" },
-      { id: "f3", text: "How to get a duplicate voter ID?", category: "practical" },
-    ];
-  }
-  if (lower.includes("register") || lower.includes("name")) {
-    return [
-      { id: "f4", text: "My name is not in voter list", category: "practical" },
-      { id: "f5", text: "How to update voter details?", category: "practical" },
-      { id: "f6", text: "Voter registration deadline?", category: "practical" },
-      { id: "f-guided", text: "Guided Registration", category: "practical" },
-    ];
-  }
-  if (lower.includes("vote") || lower.includes("polling")) {
-    return [
-      { id: "f7", text: "What is NOTA?", category: "faq" },
-      { id: "f8", text: "Can I vote from a different city?", category: "practical" },
-      { id: "f9", text: "What if EVM malfunctions?", category: "practical" },
-      { id: "f-guided2", text: "Guided Voting Day", category: "practical" },
-    ];
-  }
-  if (lower.includes("result") || lower.includes("count")) {
-    return [
-      { id: "f10", text: "How are votes counted?", category: "faq" },
-      { id: "f11", text: "What is VVPAT verification?", category: "faq" },
-      { id: "f12", text: "When are results declared?", category: "faq" },
-    ];
-  }
-  const contextSuggestions: Record<ChatContext, Suggestion[]> = {
-    general: [
-      { id: "g1", text: "Tell me about Indian democracy", category: "curiosity" },
-      { id: "g2", text: "How often are elections held?", category: "faq" },
-      { id: "g3", text: "Who can vote in India?", category: "faq" },
-    ],
-    registration: [
-      { id: "r1", text: "Documents needed for registration", category: "practical" },
-      { id: "r2", text: "Online vs offline registration", category: "practical" },
-      { id: "r3", text: "How long does verification take?", category: "faq" },
-    ],
-    "voting-day": [
-      { id: "v1", text: "What time do polls open?", category: "faq" },
-      { id: "v2", text: "Can I bring my phone?", category: "practical" },
-      { id: "v3", text: "What if there is a long queue?", category: "practical" },
-    ],
-    results: [
-      { id: "res1", text: "How is the winner decided?", category: "faq" },
-      { id: "res2", text: "What if results are disputed?", category: "practical" },
-      { id: "res3", text: "Role of Election Commission", category: "curiosity" },
-    ],
-    simulation: [
-      { id: "s1", text: "Explain the simulation steps", category: "faq" },
-      { id: "s2", text: "What is a mock poll?", category: "curiosity" },
-      { id: "s3", text: "How to improve readiness score?", category: "practical" },
-    ],
-  };
   
-  if (lower.includes("step") || lower.includes("next")) {
+  if (lower.includes("step") || lower.includes("next") || lower.includes("अगला") || lower.includes("चरण")) {
      return [
-       { id: "next-step", text: "Next Step", category: "practical" },
-       { id: "learn-more", text: "Learn More", category: "curiosity" }
+       { id: "next-step", text: t.nextStep, category: "practical" },
+       { id: "learn-more", text: t.learnMore, category: "curiosity" }
      ];
   }
-
-  return contextSuggestions[context] || contextSuggestions.general;
+  
+  // Return default suggestions if no specific keyword matched
+  return DEFAULT_SUGGESTIONS.slice(0, 3).map(s => {
+      // In a real app, we'd translate these too
+      return s;
+  });
 }
 
 export function useChat(context: ChatContext = "general") {
-  const { isGuest } = useStore();
+  const { isGuest, language } = useStore();
+  const t = chatI18n[language];
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: generateId(),
       role: "assistant",
-      content: "Welcome to Election Assistant! I am here to help you understand the Indian election process. Choose a mode below and ask me anything!",
+      content: t.welcome,
       timestamp: Date.now(),
       suggestions: DEFAULT_SUGGESTIONS.slice(0, 3),
     },
@@ -214,10 +137,11 @@ export function useChat(context: ChatContext = "general") {
       try {
         await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network latency
 
-        const reply = findResponse(content.trim());
+        const history = messages.slice(-MAX_HISTORY).map(m => ({ role: m.role, content: m.content }));
+        const reply = searchElectionInfo(content.trim(), activeMode, language, context, history);
         
         if (!reply) {
-          throw new Error("Something went wrong. Please try again.");
+          throw new Error(t.error);
         }
 
         const aiMessageId = generateId();
@@ -238,7 +162,7 @@ export function useChat(context: ChatContext = "general") {
 
         // Simulate typing effect
         simulateTyping(aiMessageId, reply, (fullText) => {
-          const followUps = getFollowUpSuggestions(fullText, context);
+          const followUps = getFollowUpSuggestions(fullText, context, language);
 
           setMessages((prev) =>
             prev.map((msg) =>
@@ -285,12 +209,12 @@ export function useChat(context: ChatContext = "general") {
     const modeMessage: ChatMessage = {
       id: generateId(),
       role: "assistant",
-      content: `Switched to ${mode.charAt(0).toUpperCase() + mode.slice(1)} mode. I will now provide ${mode === "simple" ? "short and easy" : mode === "detailed" ? "in-depth structured" : mode === "example" ? "real-life scenario-based" : "quiz-style"} explanations. Ask me anything!`,
+      content: t.switched(mode),
       mode,
       timestamp: Date.now(),
     };
     setMessages((prev) => [...prev, modeMessage]);
-  }, []);
+  }, [t]);
 
   const retryLastMessage = useCallback(() => {
     // Remove any error messages
@@ -316,14 +240,14 @@ export function useChat(context: ChatContext = "general") {
       {
         id: generateId(),
         role: "assistant",
-        content: "Chat cleared! Welcome back to Democracy Lab AI. How can I help you today?",
+        content: t.cleared,
         timestamp: Date.now(),
         suggestions: DEFAULT_SUGGESTIONS.slice(0, 3),
       },
     ]);
     setSuggestions(DEFAULT_SUGGESTIONS.slice(0, 3));
     setError(null);
-  }, [cancelTyping]);
+  }, [cancelTyping, t.cleared]);
 
 
 
