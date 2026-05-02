@@ -22,7 +22,9 @@ steps:
       - '--region'
       - 'us-central1'
       - '--set-env-vars'
-      - 'NEXT_PUBLIC_SUPABASE_URL=${_NEXT_PUBLIC_SUPABASE_URL},NEXT_PUBLIC_SUPABASE_ANON_KEY=${_NEXT_PUBLIC_SUPABASE_ANON_KEY}'
+      - 'NEXT_PUBLIC_SUPABASE_URL=${_NEXT_PUBLIC_SUPABASE_URL}'
+      - '--set-env-vars'
+      - 'NEXT_PUBLIC_SUPABASE_ANON_KEY=${_NEXT_PUBLIC_SUPABASE_ANON_KEY}'
       - '--allow-unauthenticated'
 substitutions:
   _NEXT_PUBLIC_SUPABASE_URL: ''
