@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { staggerContainer, fadeInUp } from "@/lib/animation-variants";
+import { CallButton } from "@/components/features/CallButton";
+import { MapButton } from "@/components/features/MapButton";
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -44,33 +46,9 @@ export function Hero() {
           <span className="text-sm text-[#9CA3AF]">Interactive Election Experience</span>
         </motion.div>
 
-        {/* Title with word-by-word animation */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-          {titleWords.map((word, i) => (
-            <motion.span
-              key={i}
-              className="inline-block mr-[0.25em]"
-              variants={{
-                hidden: { opacity: 0, y: 60, rotateX: -40 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  rotateX: 0,
-                  transition: {
-                    duration: 0.8,
-                    delay: i * 0.1,
-                    ease: [0.22, 1, 0.36, 1],
-                  },
-                },
-              }}
-            >
-              {word === "Democracy" || word === "Never" || word === "Before" ? (
-                <span className="gradient-text glow-text">{word}</span>
-              ) : (
-                word
-              )}
-            </motion.span>
-          ))}
+        {/* Title */}
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">
+          Understand the <span className="text-[#10B981]">Election Process</span> in India
         </h1>
 
         {/* Subtitle */}
@@ -78,22 +56,24 @@ export function Hero() {
           variants={fadeInUp}
           className="text-xl md:text-2xl text-[#9CA3AF] mb-12 max-w-2xl mx-auto"
         >
-          Learn, simulate, and master the election process through immersive
-          storytelling and AI guidance
+          A simple, clean guide to help every citizen exercise their right to vote.
         </motion.p>
 
-        {/* CTA Button */}
-        <motion.div variants={fadeInUp}>
+        {/* CTA Buttons */}
+        <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-4">
           <MagneticButton
             onClick={() => {
               document
-                .getElementById("simulation")
+                .getElementById("process")
                 ?.scrollIntoView({ behavior: "smooth" });
             }}
             glow
           >
-            Start Simulation
+            Get Started
           </MagneticButton>
+          
+          <CallButton />
+          <MapButton />
         </motion.div>
 
         {/* Scroll indicator */}

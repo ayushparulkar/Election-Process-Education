@@ -9,51 +9,43 @@ import { Calendar, Users, FileCheck, Vote, BarChart3, Award } from "lucide-react
 const timelineEvents = [
   {
     id: 1,
-    title: "Election Announcement",
-    description: "Election Commission announces dates and schedule",
-    date: "Day 1",
+    title: "Register as voter",
+    description: "Apply online or offline to get your name on the electoral roll.",
+    date: "Step 1",
     icon: Calendar,
     color: "#6366F1",
   },
   {
     id: 2,
-    title: "Nomination Filing",
-    description: "Candidates file their nomination papers",
-    date: "Day 7",
+    title: "Verify voter ID",
+    description: "Check your name in the voter list and verify your EPIC details.",
+    date: "Step 2",
     icon: FileCheck,
     color: "#22D3EE",
   },
   {
     id: 3,
-    title: "Campaign Period",
-    description: "Candidates campaign and present their manifestos",
-    date: "Day 14-30",
+    title: "Find polling booth",
+    description: "Locate your assigned polling station near your residence.",
+    date: "Step 3",
     icon: Users,
     color: "#10B981",
   },
   {
     id: 4,
-    title: "Voting Day",
-    description: "Citizens cast their votes at polling stations",
-    date: "Day 35",
+    title: "Vote using EVM",
+    description: "Visit the booth on election day and cast your vote securely.",
+    date: "Step 4",
     icon: Vote,
     color: "#F59E0B",
   },
   {
     id: 5,
-    title: "Vote Counting",
-    description: "Votes are counted and verified",
-    date: "Day 36",
+    title: "View results",
+    description: "Wait for counting day to see the official election results.",
+    date: "Step 5",
     icon: BarChart3,
     color: "#EF4444",
-  },
-  {
-    id: 6,
-    title: "Results Declared",
-    description: "Winners are announced and certificates issued",
-    date: "Day 37",
-    icon: Award,
-    color: "#8B5CF6",
   },
 ];
 
@@ -63,7 +55,7 @@ export function TimelineSection() {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="timeline" className="relative py-32 px-4 overflow-hidden">
+    <section id="process" className="relative py-32 px-4 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -77,10 +69,10 @@ export function TimelineSection() {
             variants={fadeInUp}
             className="text-4xl md:text-5xl font-bold mb-4"
           >
-            Election <span className="gradient-text">Timeline</span>
+            Election <span className="gradient-text">Process</span>
           </motion.h2>
           <motion.p variants={fadeInUp} className="text-[#9CA3AF] text-lg max-w-2xl mx-auto">
-            The journey from announcement to results
+            A step-by-step flow of the Indian election journey
           </motion.p>
         </motion.div>
 

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { LenisProvider } from "@/components/providers/lenis-provider";
+import dynamic from "next/dynamic";
 import { AuthProvider } from "@/components/auth/auth-provider";
-import { CustomCursor } from "@/components/cursor/custom-cursor";
+
+import { ClientProviders } from "@/components/providers/client-providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,10 +25,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full custom-cursor-active">
         <AuthProvider>
-          <LenisProvider>
-            <CustomCursor />
+          <ClientProviders>
             {children}
-          </LenisProvider>
+          </ClientProviders>
         </AuthProvider>
       </body>
     </html>

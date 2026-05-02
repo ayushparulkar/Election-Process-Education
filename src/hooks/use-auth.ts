@@ -11,22 +11,31 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase || !supabase.auth) {
+      setLoading(false);
+      return;
+    }
     // Check for existing session
     const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      if (session?.user) {
-        setUser(session.user as User);
-      } else {
-        // Check for guest mode in localStorage
-        const guestMode = localStorage.getItem("democracy-lab-guest");
-        if (guestMode === "true") {
-          setGuest(true);
+        if (session?.user) {
+          setUser(session.user as User);
+        } else {
+          // Check for guest mode in localStorage
+          const guestMode = localStorage.getItem("democracy-lab-guest");
+          if (guestMode === "true") {
+            setGuest(true);
+          }
         }
+      } catch (e) {
+        console.warn("Auth session check failed:", e);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getSession();

@@ -1,0 +1,20 @@
+{
+  "faq": [
+    {
+      "keywords": ["register", "registration", "apply"],
+      "answer": "You can register online through the NVSP portal (nvsp.in) or by filling Form 6 at your local Electoral Registration Office. You must be an Indian citizen and 18 years or older."
+    },
+    {
+      "keywords": ["documents", "proof", "id"],
+      "answer": "Required documents include a passport-sized photograph, age proof (Birth Certificate/Aadhaar), and address proof (Ration Card/Passport/Electricity bill)."
+    },
+    {
+      "keywords": ["process", "how to vote", "steps"],
+      "answer": "1. Check name in list. 2. Mark finger with ink. 3. Cast vote on EVM. 4. Verify on VVPAT."
+    },
+    {
+      "keywords": ["evm", "machine", "vvpat"],
+      "answer": "EVMs are electronic machines to record votes. VVPAT prints a slip to verify your vote. Press the blue button next to your candidate's symbol."
+    }
+  ]
+}

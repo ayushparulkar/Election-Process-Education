@@ -53,16 +53,13 @@ export function CTASection() {
         </motion.p>
 
         <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-          <MagneticButton
-            onClick={() => {
-              document
-                .getElementById("simulation")
-                ?.scrollIntoView({ behavior: "smooth" });
-            }}
-            glow
+          <a 
+            href="https://www.google.com/maps/search/polling+booth+near+me" 
+            target="_blank"
+            className="px-8 py-4 rounded-full font-semibold text-white bg-[#10B981] hover:bg-[#059669] transition-all flex items-center justify-center gap-2"
           >
-            Start Now
-          </MagneticButton>
+            Find Polling Booth Near Me
+          </a>
 
           <motion.button
             className="px-8 py-4 rounded-full font-semibold text-white border border-white/20 hover:bg-white/5 transition-all"
@@ -70,11 +67,11 @@ export function CTASection() {
             whileTap={{ scale: 0.95 }}
             onClick={() => {
               document
-                .getElementById("dashboard")
+                .getElementById("process")
                 ?.scrollIntoView({ behavior: "smooth" });
             }}
           >
-            View Progress
+            Learn Process
           </motion.button>
         </motion.div>
 

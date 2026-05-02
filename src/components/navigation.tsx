@@ -58,21 +58,26 @@ export function Navigation() {
               ))}
 
               {isAuthenticated && user ? (
-                <div className="flex items-center gap-3">
-                  {user.user_metadata?.avatar_url ? (
-                    <img src={user.user_metadata.avatar_url} alt="" className="w-8 h-8 rounded-full border border-white/10" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                      <User className="w-4 h-4" />
-                    </div>
-                  )}
-                  <button
-                    onClick={() => signOut()}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-[#9CA3AF] hover:text-white transition-colors"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    Logout
-                  </button>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-[#9CA3AF]">
+                    Welcome, <span className="text-white font-medium">{user.user_metadata?.full_name || user.email?.split("@")[0]}</span>
+                  </span>
+                  <div className="flex items-center gap-3">
+                    {user.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} alt="" className="w-8 h-8 rounded-full border border-white/10" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                        <User className="w-4 h-4" />
+                      </div>
+                    )}
+                    <button
+                      onClick={() => signOut()}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-[#9CA3AF] hover:text-white transition-colors"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      Logout
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <button

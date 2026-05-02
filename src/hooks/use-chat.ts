@@ -4,13 +4,17 @@ import { useState, useCallback, useRef } from "react";
 import { useStore } from "@/lib/store";
 import type { ChatMessage, ChatMode, ChatContext, Suggestion } from "@/types/chat";
 import { DEFAULT_SUGGESTIONS } from "@/types/chat";
-import Fuse from "fuse.js";
-import data from "@/data/elections.json";
+import data from "@/data/assistant-data.json";
 
-const fuse = new Fuse(data, {
-  keys: ["keywords", "topic"],
-  threshold: 0.4,
-});
+function findResponse(query: string) {
+  const lowerQuery = query.toLowerCase();
+  for (const item of data.faq) {
+    if (item.keywords.some(k => lowerQuery.includes(k))) {
+      return item.answer;
+    }
+  }
+  return "I'm sorry, I don't have information on that. Try asking about registration, documents, or EVM.";
+}
 
 function generateResponse(item: any, mode: string) {
   if (!item) {
@@ -131,7 +135,7 @@ export function useChat(context: ChatContext = "general") {
     {
       id: generateId(),
       role: "assistant",
-      content: "Welcome to Democracy Lab AI! I am here to help you understand the Indian election process. Choose a mode below and ask me anything!",
+      content: "Welcome to Election Assistant! I am here to help you understand the Indian election process. Choose a mode below and ask me anything!",
       timestamp: Date.now(),
       suggestions: DEFAULT_SUGGESTIONS.slice(0, 3),
     },
@@ -210,12 +214,9 @@ export function useChat(context: ChatContext = "general") {
       try {
         await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network latency
 
-        const result = fuse.search(content.trim());
-        const item = result.length > 0 ? result[0].item : null;
+        const reply = findResponse(content.trim());
         
-        const data = generateResponse(item, activeMode);
-        
-        if (!data.reply) {
+        if (!reply) {
           throw new Error("Something went wrong. Please try again.");
         }
 
@@ -236,7 +237,7 @@ export function useChat(context: ChatContext = "general") {
         setIsTyping(false);
 
         // Simulate typing effect
-        simulateTyping(aiMessageId, data.reply, (fullText) => {
+        simulateTyping(aiMessageId, reply, (fullText) => {
           const followUps = getFollowUpSuggestions(fullText, context);
 
           setMessages((prev) =>
